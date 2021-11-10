@@ -1,5 +1,9 @@
 # Modern Apps Demo
 
+This repository include files and instructions to reproduce the Modern Applications NGINX demo presented in the following Video
+
+[![IMAGE ALT TEXT HERE](https://yt-embed.herokuapp.com/embed?v=CFcLVm8htI8)](https://www.youtube.com/watch?v=CFcLVm8htI8)
+
 
 ### Deploy Arcadia Finance application
 ```shell
