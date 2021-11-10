@@ -1,0 +1,70 @@
+apiVersion: k8s.nginx.org/v1
+kind: VirtualServer
+metadata:
+  name: arcadia
+spec:
+  host: www.arcadia-finance.io
+#  policies:
+#  - name: acl-policy
+#  - name: ratelimit-policy
+#  - name: waf-policy
+  upstreams:
+  - name: main
+    service: main
+    port: 80
+  - name: backend
+    service: backend
+    port: 80
+  - name: app2
+    service: app2
+    port: 80
+  - name: app3
+    service: app3
+    port: 80
+    healthCheck:
+      enable: true
+      path: /status
+      interval: 5s
+      fails: 1
+      passes: 1
+      statusMatch: "200"
+  routes:
+  - path: /
+    action:
+      pass: main
+  - path: /files
+    action:
+      pass: backend
+  - path: /api/
+    action:
+      pass: app2
+  - path: /app3/
+    action:
+      pass: app3
+    errorPages:
+    - codes: [502]
+      redirect:
+        code: 301
+        url: https://www.f5.com
+  - path: /test
+    action: 
+      proxy: 
+        upstream: main
+        requestHeaders:
+          pass: true
+          set:
+          - name: Content-Type
+            value: application/json
+        responseHeaders:
+          add:
+          - name: My-Custom-HTTP-Header
+            value: "NGINX Is Cool" 
+            always: true 
+          hide:
+          - x-internal-version
+          ignore:
+          - Expires
+          - Set-Cookie
+          pass:
+          - Server
+        rewritePath: /
