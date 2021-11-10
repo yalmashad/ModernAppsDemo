@@ -57,12 +57,21 @@ $ helm list
 NAME      	NAMESPACE	REVISION	UPDATED                                	STATUS  	CHART               	APP VERSION
 my-ingress	default  	1       	2021-11-10 14:25:59.573764945 +0400 +04	deployed	nginx-ingress-0.11.3	2.0.3
 ```
+
+Verify the ingress controller deplyment
 ```shell
-$ kubectl get deployments.apps -l app.kubernetes.io/managed-by=Helm
+$ kubectl get deployments.apps -l app.kubernetes.io/instance=my-ingress
 NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
 my-ingress-nginx-ingress   1/1     1            1           113s
 ```
 
+Verify the ingress controller NodePort service
+```shell
+$ kubectl get svc -l app.kubernetes.io/instance=my-ingress
+NAME                       TYPE       CLUSTER-IP       EXTERNAL-IP   PORT(S)                      AGE
+my-ingress-nginx-ingress   NodePort   10.102.146.102   <none>        80:30080/TCP,443:30443/TCP   50m
+```
+  
 ### Create Ingress Resources
 
 #### Standard Kuberenets Ingress Resources
